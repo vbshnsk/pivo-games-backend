@@ -11,6 +11,7 @@ This is the back-end (API) part of the project and is a part of educational univ
   1. crossword puzzles;
   2. multiple choice (a la "Who wants to be a millionaire?");
   3. finish the lyrics;
+  
   ...and more to come.
 * API endpoints for frontend to communicate 
 * ability for users to play and solve puzzles in multiplayer:
@@ -21,7 +22,8 @@ This is the back-end (API) part of the project and is a part of educational univ
 * Fastify
 * Postgres
 * Websockets
+* Docker
 * Typescript
 
 
-As well as additional open APIs: dictionaries, song lyrics databases, trivia databases etc.
+As well as additional open APIs: dictionaries, song lyrics databases, trivia databases etc, and cloud API's to deploy.
