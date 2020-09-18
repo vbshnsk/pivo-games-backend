@@ -10,7 +10,8 @@ This is the back-end (API) part of the project and is a part of educational univ
 * random games generator - at first: 
   1. crossword puzzles;
   2. multiple choice (a la "Who wants to be a millionaire?");
-  3. finish the lyrics etc;
+  3. finish the lyrics;
+  ...and more to come.
 * API endpoints for frontend to communicate 
 * ability for users to play and solve puzzles in multiplayer:
   1. together;
