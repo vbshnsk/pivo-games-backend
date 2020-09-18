@@ -26,4 +26,4 @@ This is the back-end (API) part of the project and is a part of educational univ
 * Typescript
 
 
-As well as additional open APIs: dictionaries, song lyrics databases, trivia databases etc, and cloud API's to deploy.
+As well as additional open APIs: dictionaries, song lyrics databases, trivia databases etc, and cloud APIs to deploy.
