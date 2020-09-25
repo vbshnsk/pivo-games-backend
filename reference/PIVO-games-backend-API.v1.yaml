@@ -1,0 +1,20 @@
+openapi: 3.0.0
+info:
+  title: PIVO games backend API
+  version: '1.0'
+  license:
+    name: MIT
+  description: ''
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /users:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-users
+      description: Gets all users
+components:
+  schemas: {}
+  securitySchemes: {}
