@@ -1,0 +1,18 @@
+version: "3.4"
+
+services:
+    server:
+        container_name: pivo-server
+        build:
+            context: ./
+            args:
+                - NODE_ENV=production
+        ports: 
+            - "3000:3000"
+        env_file: .env
+        networks:
+            - network
+
+networks:
+    network:
+        driver: bridge

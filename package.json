@@ -1,0 +1,31 @@
+{
+  "name": "pivo-back",
+  "version": "1.0.0",
+  "description": "PIVO games back end API",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "start-dev": "nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbshnsk/pivo-games-backend.git"
+  },
+  "keywords": [
+    "game",
+    "puzzle",
+    "api",
+    "back"
+  ],
+  "author": "Vlad Bushynskyi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vbshnsk/pivo-games-backend/issues"
+  },
+  "homepage": "https://github.com/vbshnsk/pivo-games-backend#readme",
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  }
+}

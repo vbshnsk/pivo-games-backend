@@ -1,0 +1,12 @@
+{
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    "outDir": "dist",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "target": "ES2019",
+    "moduleResolution": "node"
+  }
+}
