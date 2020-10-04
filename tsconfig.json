@@ -4,7 +4,7 @@
   "compilerOptions": {
     "typeRoots": ["node_modules/@types"],
     "outDir": "dist",
-    "module": "ESNext",
+    "module": "commonjs",
     "lib": ["ESNext", "DOM"],
     "target": "ES2019",
     "moduleResolution": "node"

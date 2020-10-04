@@ -1,5 +1,14 @@
-function f(a: String) {
-    console.log("Hello, " + a);
-}
+import fastify from 'fastify';
 
-f("World");
+const server = fastify();
+
+server.get('/test', async () => {
+    return 'Hello World';
+});
+
+server.listen(3000, (err, address) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(`Server is listening at ${address}`);
+});
