@@ -1,0 +1,50 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint:recommended", "plugin:jest/recommended", "plugin:@typescript-eslint/recommended"],
+    "rules": {
+      // Enforcing
+      "indent": [
+        "error",
+        4,
+        {"SwitchCase": 1}
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "no-bitwise": ["error"],
+      "camelcase": ["off"],
+      "eqeqeq": ["error"],
+      "wrap-iife": ["error"],
+      "no-use-before-define": ["off"],
+      "new-cap": ["error", { "properties": false }],
+      "no-caller": ["error"],
+      "no-new": ["error"],
+      "no-plusplus": ["off"],
+      "no-undef": ["error"],
+      "no-unused-vars": ["off"],
+      "max-params": ["error", 10],
+      "max-depth": ["error", 5],
+      "max-statements": ["error", 40],
+      "max-len": ["error", 120],
+      "no-var": ["off"]
+    },
+    "plugins": [
+      "jest",
+      "@typescript-eslint"
+    ]
+}

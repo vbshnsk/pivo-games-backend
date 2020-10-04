@@ -1,0 +1,43 @@
+{
+  "name": "pivo-back",
+  "version": "1.0.0",
+  "description": "PIVO games back end API",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start-dev": "nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "lint": "eslint ./src/*.**"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbshnsk/pivo-games-backend.git"
+  },
+  "keywords": [
+    "game",
+    "puzzle",
+    "api",
+    "back"
+  ],
+  "author": "Vlad Bushynskyi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vbshnsk/pivo-games-backend/issues"
+  },
+  "homepage": "https://github.com/vbshnsk/pivo-games-backend#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.2",
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
+    "eslint": "^7.10.0",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "eslint-plugin-jest": "^24.0.2",
+    "fastify": "^3.5.1"
+  }
+}
