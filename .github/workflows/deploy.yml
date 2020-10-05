@@ -1,0 +1,66 @@
+name: Release
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Install dependencies
+        run: npm i
+      - name: Run tests
+        run: npm test
+  linter:
+    name: Lint code
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Install deps, eslint and plugins
+        run: npm i
+      - name: Run linter
+        run: npm run lint
+  push-image:
+    name: Deploy docker image to GCP
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'master' }}
+    needs: linter
+    env:
+      NODE_ENV: 'production'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build image
+        run: docker-compose build
+      - name: Setup GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_REGISTRY_SERVICE }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Tag image
+        run: docker tag pivo-backend_server "eu.gcr.io/$PROJECT_ID/server"
+      - name: Auth gcloud registry service
+        run: gcloud --quiet auth configure-docker
+      - name: Push image to the registry
+        run: docker push "eu.gcr.io/$PROJECT_ID/server"
+  deploy-cluster:
+    name: Deploy docker image to GCP
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'master' }}
+    needs: push-image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_KUBERNETES_SERVICE }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
