@@ -1,11 +1,21 @@
-name: Release
+name: Deploy
 
-on: [push, pullrequest]
+on: push
+
+env:
+  NODE_ENV: production
+  GKE_CLUSTER: eu-backend
+  GKE_ZONE: europe-west1-d
+  DEPLOYMENT_NAME: pivo-games-backend
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  IMAGE_NAME: backend
 
 jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: development
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,6 +29,8 @@ jobs:
     name: Lint code
     runs-on: ubuntu-latest
     needs: test
+    env:
+      NODE_ENV: development
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -33,8 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'master' }}
     needs: linter
-    env:
-      NODE_ENV: 'production'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -46,13 +56,13 @@ jobs:
           service_account_key: ${{ secrets.GCP_REGISTRY_SERVICE }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Tag image
-        run: docker tag pivo-backend_server "eu.gcr.io/$PROJECT_ID/server"
+        run: docker tag "pivo-games-backend_server" eu.gcr.io/$PROJECT_ID/$IMAGE_NAME:$GITHUB_SHA
       - name: Auth gcloud registry service
         run: gcloud --quiet auth configure-docker
       - name: Push image to the registry
-        run: docker push "eu.gcr.io/$PROJECT_ID/server"
+        run: docker push eu.gcr.io/$PROJECT_ID/$IMAGE_NAME:$GITHUB_SHA
   deploy-cluster:
-    name: Deploy docker image to GCP
+    name: Deploy Kubernetes cluster to GCP
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'master' }}
     needs: push-image
@@ -64,3 +74,15 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_KUBERNETES_SERVICE }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Get Credentials
+        run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      - name: Kustomize Install
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+      - name: Kustomize Deploy
+        run: |-
+          ./kustomize edit set image eu.gcr.io/PROJECT_ID/IMAGE:TAG=eu.gcr.io/$PROJECT_ID/$IMAGE_NAME:$GITHUB_SHA
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/$DEPLOYMENT_NAME
+          kubectl get services -o wide

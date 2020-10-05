@@ -1,0 +1,15 @@
+name: Check Conventional Commits
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-for-conv-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Conventional Commit Checker
+        uses: agenthunt/conventional-commit-checker-action@v1.0.0

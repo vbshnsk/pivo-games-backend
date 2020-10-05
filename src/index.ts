@@ -6,7 +6,11 @@ server.get('/test', async () => {
     return 'Hello World';
 });
 
-server.listen(3000, (err, address) => {
+server.get('/another_test', async () => {
+    return 'Hello from another World';
+});
+
+server.listen(8080, '0.0.0.0', (err, address) => {
     if (err) {
         console.log(err);
     }
