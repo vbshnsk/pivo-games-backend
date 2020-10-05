@@ -1,6 +1,6 @@
 name: Release
 
-on: [push, pullrequest]
+on: push
 
 jobs:
   test:
@@ -31,7 +31,7 @@ jobs:
   push-image:
     name: Deploy docker image to GCP
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'master' }}
+#    if: ${{ github.ref == 'master' }}
     needs: linter
     env:
       NODE_ENV: 'production'
@@ -52,9 +52,9 @@ jobs:
       - name: Push image to the registry
         run: docker push "eu.gcr.io/$PROJECT_ID/server"
   deploy-cluster:
-    name: Deploy docker image to GCP
+    name: Deploy Kubernetes cluster to GCP
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'master' }}
+#    if: ${{ github.ref == 'master' }}
     needs: push-image
     steps:
       - name: Checkout
