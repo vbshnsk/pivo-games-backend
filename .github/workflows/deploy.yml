@@ -43,7 +43,7 @@ jobs:
   push-image:
     name: Deploy docker image to GCP
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'master' }}
+    if: github.ref == 'refs/heads/master'
     needs: linter
     steps:
       - name: Checkout
@@ -64,7 +64,7 @@ jobs:
   deploy-cluster:
     name: Deploy Kubernetes cluster to GCP
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'master' }}
+    if: github.ref == 'refs/heads/master'
     needs: push-image
     steps:
       - name: Checkout
