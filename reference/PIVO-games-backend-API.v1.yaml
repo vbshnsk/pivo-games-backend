@@ -1,15 +1,29 @@
 openapi: 3.0.0
+servers:
+  - url: 35.233.79.129:80
 info:
   title: PIVO games backend API
-  version: '1.0'
+  version: '1.1'
   license:
     name: MIT
   description: PIVO Games back-end API
   contact:
-    name: vbshnsk
-servers:
-  - url: 'http://localhost:3000'
+    name: Vladyslav Bushynskyi
 paths:
+  '/auth':
+    get:
+      summary: Authorize user
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  string: jwt
+          '404':
+            description: Not Found
+          '401':
+            description: Bad Request
   '/users/{userId}':
     parameters:
       - schema:
@@ -18,7 +32,7 @@ paths:
         in: path
         required: true
     get:
-      summary: User Endpoint
+      summary: Get User Endpoint
       tags: []
       responses:
         '200':
@@ -67,7 +81,7 @@ paths:
         in: path
         required: true
     get:
-      summary: User profile.
+      summary: Get User profile
       tags: []
       responses:
         '200':
@@ -120,7 +134,7 @@ paths:
           name: gameName
           description: Name of the game to query stats from.
     put:
-      summary: 'Update user Stats'
+      summary: Update user Stats
       operationId: put-users-userId-profile-stats
       responses:
         '201':
@@ -135,7 +149,7 @@ paths:
                 - $ref: '#/components/schemas/SongStats'
   /generator:
     get:
-      summary: Your GET endpoint
+      summary: Game generator
       tags: []
       responses:
         '200':
@@ -186,7 +200,6 @@ components:
     User:
       title: User
       type: object
-      description: ''
       properties:
         id:
           type: string
@@ -258,4 +271,3 @@ components:
       properties:
         id:
           type: string
-  securitySchemes: {}
