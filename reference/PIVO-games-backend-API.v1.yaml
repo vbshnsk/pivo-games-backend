@@ -1,20 +1,274 @@
 openapi: 3.0.0
+servers:
+  - url: 35.233.79.129:80
 info:
   title: PIVO games backend API
-  version: '1.0'
+  version: '1.1'
   license:
     name: MIT
-  description: ''
-servers:
-  - url: 'http://localhost:3000'
+  description: PIVO Games back-end API
+  contact:
+    name: Vladyslav Bushynskyi
 paths:
-  /users:
+  '/auth':
     get:
-      summary: Your GET endpoint
+      summary: Authorize user
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  string: jwt
+          '404':
+            description: Not Found
+          '401':
+            description: Bad Request
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get User Endpoint
       tags: []
-      responses: {}
-      operationId: get-users
-      description: Gets all users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+      operationId: get-users-userId
+      description: Get a specific User information
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: token
+          description: Auth token
+    post:
+      summary: ''
+      operationId: post-users-userId
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+      description: Create a User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+        description: ''
+  '/users/{userId}/profile':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get User profile
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '404':
+          description: Not Found
+      operationId: get-users-userId-profile
+      description: Gets user's Profile
+    put:
+      summary: ''
+      operationId: put-users-userId-profile
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+      description: Update user's Profile
+  '/users/{userId}/profile/stats':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get user Stats
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/BrainstormStats'
+                  - $ref: '#/components/schemas/CrosswordsStats'
+                  - $ref: '#/components/schemas/SongStats'
+      operationId: get-users-userId-profile-stats
+      description: ''
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: gameName
+          description: Name of the game to query stats from.
+    put:
+      summary: Update user Stats
+      operationId: put-users-userId-profile-stats
+      responses:
+        '201':
+          description: Created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CrosswordsStats'
+                - $ref: '#/components/schemas/BrainstormStats'
+                - $ref: '#/components/schemas/SongStats'
+  /generator:
+    get:
+      summary: Game generator
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/CrosswordGame'
+                  - $ref: '#/components/schemas/BrainstormGame'
+                  - $ref: '#/components/schemas/SongGame'
+      operationId: get-generator-brainstorm
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                difficulty:
+                  type: string
+                categories:
+                  type: array
+                  items:
+                    type: string
+                numOfQuestions:
+                  type: integer
+                multiplayerSettings:
+                  type: object
+                  properties:
+                    otherPlayerId:
+                      type: string
+                    mode:
+                      type: string
+                  required:
+                    - otherPlayerId
+                    - mode
+                game:
+                  type: string
+              required:
+                - difficulty
+                - categories
+                - numOfQuestions
+                - game
+    parameters: []
 components:
-  schemas: {}
+  schemas:
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        profileId:
+          type: string
+        password:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - role
+        - profileId
+        - password
+      x-examples: {}
+    Profile:
+      title: Profile
+      type: object
+      properties:
+        id:
+          type: string
+        crosswordStatsId:
+          type: string
+        brainstormStatsId:
+          type: string
+        songStatsId:
+          type: string
+        avatarUrl:
+          type: string
+    CrosswordsStats:
+      title: CrosswordsStats
+      type: object
+      properties:
+        id:
+          type: string
+    BrainstormStats:
+      title: BrainstormStats
+      type: object
+      properties:
+        id:
+          type: string
+    SongStats:
+      title: SongStats
+      type: object
+      properties:
+        id:
+          type: string
+    CrosswordGame:
+      title: CrosswordGame
+      type: object
+      properties:
+        id:
+          type: string
+    BrainstormGame:
+      title: BrainstormGame
+      type: object
+      properties:
+        id:
+          type: string
+    SongGame:
+      title: SongGame
+      type: object
+      properties:
+        id:
+          type: string
   securitySchemes: {}
