@@ -8,7 +8,7 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
         sign: (username: string, role: string) => jwt.sign({username, role}, 'placeholder'),
         verify: (token: string) =>  jwt.verify(token, 'placeholder', {maxAge: '1 month'})
     });
-}
+};
 
 export interface auth {
     verify: (token: string) => Pick<User, 'username'|'role'>;

@@ -37,15 +37,10 @@ export default class UserRepository extends Repository<User> {
         profile.brainstormStatsId = '';
         profile.songStatsId = '';
         user.profile = profile;
-        try {
-            const res = await this.save(user);
-            return {
-                username: res.username,
-                email: res.email
-            };
-        }
-        catch (e) {
-            console.log(123)
-        }
+        const res = await this.save(user);
+        return {
+            username: res.username,
+            email: res.email
+        };
     }
 }
