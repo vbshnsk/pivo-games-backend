@@ -2,11 +2,14 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "src/@types"],
     "outDir": "dist",
     "module": "commonjs",
     "lib": ["ESNext", "DOM"],
     "target": "ES2019",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }
