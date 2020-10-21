@@ -31,7 +31,6 @@
       "eqeqeq": ["error"],
       "wrap-iife": ["error"],
       "no-use-before-define": ["off"],
-      "new-cap": ["error", { "properties": false }],
       "no-caller": ["error"],
       "no-new": ["error"],
       "no-plusplus": ["off"],
@@ -41,7 +40,10 @@
       "max-depth": ["error", 5],
       "max-statements": ["error", 40],
       "max-len": ["error", 120],
-      "no-var": ["off"]
+      "no-var": ["off"],
+      "@typescript-eslint/no-empty-interface": ["off"],
+      "@typescript-eslint/no-unused-vars": ["off"],
+      "@typescript-eslint/explicit-module-boundary-types": ["off"]
     },
     "plugins": [
       "jest",

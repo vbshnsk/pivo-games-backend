@@ -17,3 +17,6 @@ spec:
           image: eu.gcr.io/PROJECT_ID/IMAGE:TAG
           ports:
             - containerPort: 8080
+          env:
+            - name: NODE_ENV
+              value: "production"
