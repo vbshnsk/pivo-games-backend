@@ -13,17 +13,17 @@ paths:
   '/auth':
     get:
       summary: Authorize user
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  string: jwt
-          '404':
-            description: Not Found
-          '401':
-            description: Bad Request
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                string: jwt
+        '404':
+          description: Not Found
+        '401':
+          description: Bad Request
   '/users/{userId}':
     parameters:
       - schema:
