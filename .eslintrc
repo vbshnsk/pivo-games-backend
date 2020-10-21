@@ -41,7 +41,9 @@
       "max-statements": ["error", 40],
       "max-len": ["error", 120],
       "no-var": ["off"],
-      "@typescript-eslint/no-empty-interface": ["off"]
+      "@typescript-eslint/no-empty-interface": ["off"],
+      "@typescript-eslint/no-unused-vars": ["off"],
+      "@typescript-eslint/explicit-module-boundary-types": ["off"]
     },
     "plugins": [
       "jest",
