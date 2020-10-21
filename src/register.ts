@@ -4,6 +4,7 @@ import services from './services';
 import plugins from  './plugins';
 
 export default async (fastify: FastifyInstance, opts: FastifyPluginOptions) => {
+    console.log(process.env);
     fastify
         .register(plugins)
         .register(services)

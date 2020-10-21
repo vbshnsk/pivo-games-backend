@@ -12,7 +12,6 @@ RUN npm install;
 
 RUN npm run build
 
-
 FROM node:14.1.0-alpine as prod
 
 WORKDIR /app
