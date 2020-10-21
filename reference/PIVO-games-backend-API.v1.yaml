@@ -12,12 +12,21 @@ info:
 paths:
   /auth:
     post:
-      summary: ''
+      summary: Login Endpoint
       operationId: auth-user
       responses:
         '200':
           description: OK
-      description: User logi in system
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                  - token
+      description: User login in system
       requestBody:
         content:
           application/json:
@@ -34,39 +43,27 @@ paths:
               required:
                 - name
                 - password
-  '/user/{userName}':
+        description: User credentials
+      tags:
+        - auth
+  '/user/{username}':
     parameters:
       - schema:
           type: string
-        name: userName
+        name: username
         in: path
         required: true
-        description: require
     get:
       summary: Get User Endpoint
-      tags: []
+      tags:
+        - user
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                description: ''
-                type: object
-                properties:
-                  username:
-                    type: string
-                    minLength: 1
-                  profile:
-                    type: string
-                    minLength: 1
-                  email:
-                    type: string
-                    minLength: 1
-                required:
-                  - username
-                  - profile
-                  - email
+                $ref: '#/components/schemas/User'
             application/xml:
               schema:
                 type: object
@@ -83,51 +80,35 @@ paths:
           in: header
           name: token
           description: Auth token
-  '/user/{userName}/profile':
+  '/user/{username}/profile':
     parameters:
       - schema:
           type: string
-        name: userName
+        name: username
         in: path
         required: true
     get:
       summary: Get User profile
-      tags: []
+      tags:
+        - user
+        - profile
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                description: ''
-                type: object
-                properties:
-                  username:
-                    type: string
-                    minLength: 1
-                  profile:
-                    type: string
-                    minLength: 1
-                  email:
-                    type: string
-                    minLength: 1
-                required:
-                  - username
-                  - profile
-                  - email
+                $ref: '#/components/schemas/Profile'
             application/xml:
               schema:
                 type: object
                 properties: {}
       operationId: get-user-userName-profile
       description: Gets user's Profile
-      parameters:
-        - schema:
-            type: string
-          in: header
+      parameters: []
     put:
-      summary: ''
-      operationId: put-user-userName-profile
+      summary: Update User Profile
+      operationId: put-user-username-profile
       responses:
         '201':
           description: Created
@@ -139,7 +120,7 @@ paths:
           description: Unauthorized
         '404':
           description: Not Found
-      description: Update user's Profile
+      description: Update User's Profile
       parameters:
         - schema:
             type: string
@@ -154,20 +135,26 @@ paths:
               type: object
               properties:
                 profile:
-                  type: string
-                  minLength: 1
+                  type: object
               required:
                 - profile
-  '/user/{userName}/profile/statistics':
+      tags:
+        - user
+        - profile
+  '/user/{username}/profile/statistic':
     parameters:
       - schema:
           type: string
-        name: userName
+        name: username
         in: path
         required: true
     get:
       summary: Get user Stats
-      tags: []
+      tags:
+        - game
+        - profile
+        - stats
+        - auth
       responses:
         '200':
           description: OK
@@ -178,12 +165,6 @@ paths:
                   - $ref: '#/components/schemas/BrainstormStats'
                   - $ref: '#/components/schemas/CrosswordsStats'
                   - $ref: '#/components/schemas/SongStats'
-        '':
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
       operationId: get-user-usernamr-profile-statistics
       description: Getting statistics of the current user
       parameters:
@@ -206,10 +187,6 @@ paths:
                 - $ref: '#/components/schemas/CrosswordsStats'
                 - $ref: '#/components/schemas/BrainstormStats'
                 - $ref: '#/components/schemas/SongStats'
-          application/xml:
-            schema:
-              type: object
-              properties: {}
         description: ''
       description: Сhanging statistics of the current user
       parameters:
@@ -217,9 +194,19 @@ paths:
             type: string
           in: header
           name: token
-  /generator:
+      tags:
+        - stats
+        - profile
+  '/game/{gameId}':
+    parameters:
+      - schema:
+          type: string
+        name: gameId
+        in: path
+        required: true
+        description: Id of game to generate
     get:
-      summary: Game generator
+      summary: Your GET endpoint
       tags: []
       responses:
         '200':
@@ -229,116 +216,79 @@ paths:
               schema:
                 oneOf:
                   - $ref: '#/components/schemas/CrosswordGame'
-                  - $ref: '#/components/schemas/BrainstormGame'
                   - $ref: '#/components/schemas/SongGame'
-      operationId: get-generator-brainstorm
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                difficulty:
-                  type: string
-                categories:
-                  type: array
-                  items:
-                    type: string
-                numOfQuestions:
-                  type: integer
-                multiplayerSettings:
-                  type: object
-                  properties:
-                    otherPlayerId:
-                      type: string
-                    mode:
-                      type: string
-                  required:
-                    - otherPlayerId
-                    - mode
-                game:
-                  type: string
-              required:
-                - difficulty
-                - categories
-                - numOfQuestions
-                - game
-    parameters: []
+                  - $ref: '#/components/schemas/BrainstormGame'
+        '400':
+          description: Bad Request
+      operationId: get-game-gameId
+      description: Requests a game generation
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: difficulty
+          description: Difficulty
+        - schema:
+            type: number
+          in: query
+          name: questions
+          description: Number of questions
+        - schema:
+            type: string
+          in: query
+          name: topic
+          description: Game topic
 components:
   schemas:
     User:
       title: User
       type: object
+      x-examples: {}
       properties:
-        id:
-          type: string
         name:
           type: string
         email:
           type: string
-        role:
-          type: string
         profileId:
           type: string
-        password:
-          type: string
       required:
-        - id
         - name
         - email
-        - role
         - profileId
-        - password
-      x-examples: {}
     Profile:
       title: Profile
       type: object
       properties:
-        id:
-          type: string
-        crosswordStatsId:
-          type: string
-        brainstormStatsId:
-          type: string
-        songStatsId:
-          type: string
         avatarUrl:
           type: string
+        crosswordStats:
+          $ref: '#/components/schemas/CrosswordsStats'
+        brainstormStats:
+          $ref: '#/components/schemas/BrainstormStats'
+        songStats:
+          $ref: '#/components/schemas/SongStats'
     CrosswordsStats:
       title: CrosswordsStats
       type: object
-      properties:
-        id:
-          type: string
     BrainstormStats:
       title: BrainstormStats
       type: object
-      properties:
-        id:
-          type: string
     SongStats:
       title: SongStats
       type: object
-      properties:
-        id:
-          type: string
     CrosswordGame:
       title: CrosswordGame
       type: object
-      properties:
-        id:
-          type: string
     BrainstormGame:
       title: BrainstormGame
       type: object
-      properties:
-        id:
-          type: string
     SongGame:
       title: SongGame
       type: object
-      properties:
-        id:
-          type: string
   securitySchemes: {}
+tags:
+  - name: game
+  - name: profile
+  - name: stats
+  - name: auth
+  - name: user
