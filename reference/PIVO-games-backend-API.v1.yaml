@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-  - url: 35.233.79.129:80
+  - url: '35.233.79.129:80'
 info:
   title: PIVO games backend API
   version: '1.1'
@@ -10,27 +10,38 @@ info:
   contact:
     name: Vladyslav Bushynskyi
 paths:
-  '/auth':
-    get:
-      summary: Authorize user
+  /auth:
+    post:
+      summary: ''
+      operationId: auth-user
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                string: jwt
-        '404':
-          description: Not Found
-        '401':
-          description: Bad Request
-  '/users/{userId}':
+      description: User logi in system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                password:
+                  type: string
+                  minLength: 1
+              required:
+                - name
+                - password
+  '/user/{userName}':
     parameters:
       - schema:
           type: string
-        name: userId
+        name: userName
         in: path
         required: true
+        description: require
     get:
       summary: Get User Endpoint
       tags: []
@@ -40,44 +51,43 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                description: ''
+                type: object
+                properties:
+                  username:
+                    type: string
+                    minLength: 1
+                  profile:
+                    type: string
+                    minLength: 1
+                  email:
+                    type: string
+                    minLength: 1
+                required:
+                  - username
+                  - profile
+                  - email
+            application/xml:
+              schema:
+                type: object
+                properties: {}
         '401':
           description: Unauthorized
-      operationId: get-users-userId
-      description: Get a specific User information
+        '404':
+          description: Not Found
+      operationId: get-user-userName
+      description: Get current user by name
       parameters:
         - schema:
             type: string
           in: header
           name: token
           description: Auth token
-    post:
-      summary: ''
-      operationId: post-users-userId
-      responses:
-        '201':
-          description: Created
-        '400':
-          description: Bad Request
-      description: Create a User
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-                email:
-                  type: string
-        description: ''
-  '/users/{userId}/profile':
+  '/user/{userName}/profile':
     parameters:
       - schema:
           type: string
-        name: userId
+        name: userName
         in: path
         required: true
     get:
@@ -89,14 +99,35 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '404':
-          description: Not Found
-      operationId: get-users-userId-profile
+                description: ''
+                type: object
+                properties:
+                  username:
+                    type: string
+                    minLength: 1
+                  profile:
+                    type: string
+                    minLength: 1
+                  email:
+                    type: string
+                    minLength: 1
+                required:
+                  - username
+                  - profile
+                  - email
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-user-userName-profile
       description: Gets user's Profile
+      parameters:
+        - schema:
+            type: string
+          in: header
     put:
       summary: ''
-      operationId: put-users-userId-profile
+      operationId: put-user-userName-profile
       responses:
         '201':
           description: Created
@@ -104,12 +135,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
       description: Update user's Profile
-  '/users/{userId}/profile/stats':
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: token
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                profile:
+                  type: string
+                  minLength: 1
+              required:
+                - profile
+  '/user/{userName}/profile/statistics':
     parameters:
       - schema:
           type: string
-        name: userId
+        name: userName
         in: path
         required: true
     get:
@@ -125,8 +178,14 @@ paths:
                   - $ref: '#/components/schemas/BrainstormStats'
                   - $ref: '#/components/schemas/CrosswordsStats'
                   - $ref: '#/components/schemas/SongStats'
-      operationId: get-users-userId-profile-stats
-      description: ''
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-user-usernamr-profile-statistics
+      description: Getting statistics of the current user
       parameters:
         - schema:
             type: string
@@ -135,10 +194,10 @@ paths:
           description: Name of the game to query stats from.
     put:
       summary: Update user Stats
-      operationId: put-users-userId-profile-stats
+      operationId: put-user-username-profile-statistics
       responses:
         '201':
-          description: Created
+          description: Updated
       requestBody:
         content:
           application/json:
@@ -147,6 +206,17 @@ paths:
                 - $ref: '#/components/schemas/CrosswordsStats'
                 - $ref: '#/components/schemas/BrainstormStats'
                 - $ref: '#/components/schemas/SongStats'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      description: Сhanging statistics of the current user
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: token
   /generator:
     get:
       summary: Game generator
