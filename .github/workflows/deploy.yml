@@ -9,6 +9,10 @@ env:
   DEPLOYMENT_NAME: pivo-games-backend
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   IMAGE_NAME: backend
+  PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+  PG_USER: ${{ secrets.PG_USER }}
+  PG_DB: ${{ secrets.PG_DB }}
+  PG_HOST: ${{ secrets.PG_HOST }}
 
 jobs:
   test:
@@ -49,7 +53,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build image
-        run: docker-compose build
+        run: docker-compose build --build-arg PG_HOST=${PG_HOST} \
+          --build-arg PG_PASSWORD=${PG_PASSWORD} \
+          --build-arg PG_DB=${PG_DB} \
+          --build-arg PG_DB=${PG_DB}
       - name: Setup GCP
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
