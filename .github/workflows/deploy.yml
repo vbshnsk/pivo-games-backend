@@ -53,7 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build image
-        run: docker-compose build --build-arg PG_HOST=${PG_HOST} --build-arg PG_PASSWORD=${PG_PASSWORD} --build-arg PG_DB=${PG_DB} --build-arg PG_DB=${PG_DB} pivo-server
+        run: docker-compose build --build-arg PG_HOST=${PG_HOST} --build-arg PG_PASSWORD=${PG_PASSWORD} --build-arg PG_DB=${PG_DB} --build-arg PG_DB=${PG_DB} server
       - name: Setup GCP
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
