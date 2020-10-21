@@ -206,8 +206,9 @@ paths:
         required: true
         description: Id of game to generate
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Get Game
+      tags:
+        - game
       responses:
         '200':
           description: OK
@@ -238,23 +239,77 @@ paths:
           in: query
           name: topic
           description: Game topic
+  /user:
+    get:
+      summary: Get All Users
+      tags:
+        - user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+      operationId: get-user
+      description: Get all users
+    post:
+      summary: Register User
+      operationId: post-user
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '400':
+          description: Bad Request
+      description: Register User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+      tags:
+        - auth
+        - user
 components:
   schemas:
     User:
       title: User
       type: object
       x-examples: {}
+      x-tags:
+        - user
+        - auth
       properties:
         name:
           type: string
         email:
           type: string
-        profileId:
-          type: string
+        profile:
+          $ref: '#/components/schemas/Profile'
       required:
         - name
         - email
-        - profileId
+        - profile
     Profile:
       title: Profile
       type: object
@@ -267,24 +322,38 @@ components:
           $ref: '#/components/schemas/BrainstormStats'
         songStats:
           $ref: '#/components/schemas/SongStats'
+      x-tags:
+        - profile
     CrosswordsStats:
       title: CrosswordsStats
       type: object
+      x-tags:
+        - stats
     BrainstormStats:
       title: BrainstormStats
       type: object
+      x-tags:
+        - stats
     SongStats:
       title: SongStats
       type: object
+      x-tags:
+        - stats
     CrosswordGame:
       title: CrosswordGame
       type: object
+      x-tags:
+        - game
     BrainstormGame:
       title: BrainstormGame
       type: object
+      x-tags:
+        - game
     SongGame:
       title: SongGame
       type: object
+      x-tags:
+        - game
   securitySchemes: {}
 tags:
   - name: game
