@@ -1,6 +1,6 @@
 openapi: 3.0.0
 servers:
-  - url: 35.233.79.129:80
+  - url: '35.233.79.129:80'
 info:
   title: PIVO games backend API
   version: '1.1'
@@ -10,30 +10,53 @@ info:
   contact:
     name: Vladyslav Bushynskyi
 paths:
-  '/auth':
-    get:
-      summary: Authorize user
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  string: jwt
-          '404':
-            description: Not Found
-          '401':
-            description: Bad Request
-  '/users/{userId}':
+  /auth:
+    post:
+      summary: Login Endpoint
+      operationId: auth-user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                required:
+                  - token
+      description: User login in system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                password:
+                  type: string
+                  minLength: 1
+              required:
+                - name
+                - password
+        description: User credentials
+      tags:
+        - auth
+  '/user/{username}':
     parameters:
       - schema:
           type: string
-        name: userId
+        name: username
         in: path
         required: true
     get:
       summary: Get User Endpoint
-      tags: []
+      tags:
+        - user
       responses:
         '200':
           description: OK
@@ -43,23 +66,205 @@ paths:
                 $ref: '#/components/schemas/User'
         '401':
           description: Unauthorized
-      operationId: get-users-userId
-      description: Get a specific User information
+        '404':
+          description: Not Found
+      operationId: get-user-userName
+      description: Get current user by name
       parameters:
         - schema:
             type: string
           in: header
           name: token
           description: Auth token
-    post:
-      summary: ''
-      operationId: post-users-userId
+  '/user/{username}/profile':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+    get:
+      summary: Get User profile
+      tags:
+        - user
+        - profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+      operationId: get-user-userName-profile
+      description: Gets user's Profile
+      parameters: []
+    put:
+      summary: Update User Profile
+      operationId: put-user-username-profile
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: Update User's Profile
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: token
+          description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                profile:
+                  type: object
+              required:
+                - profile
+      tags:
+        - user
+        - profile
+  '/user/{username}/profile/statistic':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+    get:
+      summary: Get user Stats
+      tags:
+        - game
+        - profile
+        - stats
+        - auth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/BrainstormStats'
+                  - $ref: '#/components/schemas/CrosswordsStats'
+                  - $ref: '#/components/schemas/SongStats'
+      operationId: get-user-usernamr-profile-statistics
+      description: Getting statistics of the current user
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: gameName
+          description: Name of the game to query stats from.
+    put:
+      summary: Update user Stats
+      operationId: put-user-username-profile-statistics
+      responses:
+        '201':
+          description: Updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/CrosswordsStats'
+                - $ref: '#/components/schemas/BrainstormStats'
+                - $ref: '#/components/schemas/SongStats'
+        description: ''
+      description: Сhanging statistics of the current user
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: token
+      tags:
+        - stats
+        - profile
+  '/game/{gameId}':
+    parameters:
+      - schema:
+          type: string
+        name: gameId
+        in: path
+        required: true
+        description: Id of game to generate
+    get:
+      summary: Get Game
+      tags:
+        - game
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/CrosswordGame'
+                  - $ref: '#/components/schemas/SongGame'
+                  - $ref: '#/components/schemas/BrainstormGame'
         '400':
           description: Bad Request
-      description: Create a User
+      operationId: get-game-gameId
+      description: Requests a game generation
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: difficulty
+          description: Difficulty
+        - schema:
+            type: number
+          in: query
+          name: questions
+          description: Number of questions
+        - schema:
+            type: string
+          in: query
+          name: topic
+          description: Game topic
+  /user:
+    get:
+      summary: Get All Users
+      tags:
+        - user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+      operationId: get-user
+      description: Get all users
+    post:
+      summary: Register User
+      operationId: post-user
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '400':
+          description: Bad Request
+      description: Register User
       requestBody:
         content:
           application/json:
@@ -72,202 +277,79 @@ paths:
                   type: string
                 email:
                   type: string
-        description: ''
-  '/users/{userId}/profile':
-    parameters:
-      - schema:
-          type: string
-        name: userId
-        in: path
-        required: true
-    get:
-      summary: Get User profile
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Profile'
-        '404':
-          description: Not Found
-      operationId: get-users-userId-profile
-      description: Gets user's Profile
-    put:
-      summary: ''
-      operationId: put-users-userId-profile
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Profile'
-      description: Update user's Profile
-  '/users/{userId}/profile/stats':
-    parameters:
-      - schema:
-          type: string
-        name: userId
-        in: path
-        required: true
-    get:
-      summary: Get user Stats
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/BrainstormStats'
-                  - $ref: '#/components/schemas/CrosswordsStats'
-                  - $ref: '#/components/schemas/SongStats'
-      operationId: get-users-userId-profile-stats
-      description: ''
-      parameters:
-        - schema:
-            type: string
-          in: query
-          name: gameName
-          description: Name of the game to query stats from.
-    put:
-      summary: Update user Stats
-      operationId: put-users-userId-profile-stats
-      responses:
-        '201':
-          description: Created
-      requestBody:
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/CrosswordsStats'
-                - $ref: '#/components/schemas/BrainstormStats'
-                - $ref: '#/components/schemas/SongStats'
-  /generator:
-    get:
-      summary: Game generator
-      tags: []
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/CrosswordGame'
-                  - $ref: '#/components/schemas/BrainstormGame'
-                  - $ref: '#/components/schemas/SongGame'
-      operationId: get-generator-brainstorm
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                difficulty:
+                role:
                   type: string
-                categories:
-                  type: array
-                  items:
-                    type: string
-                numOfQuestions:
-                  type: integer
-                multiplayerSettings:
-                  type: object
-                  properties:
-                    otherPlayerId:
-                      type: string
-                    mode:
-                      type: string
-                  required:
-                    - otherPlayerId
-                    - mode
-                game:
-                  type: string
-              required:
-                - difficulty
-                - categories
-                - numOfQuestions
-                - game
-    parameters: []
+      tags:
+        - auth
+        - user
 components:
   schemas:
     User:
       title: User
       type: object
+      x-examples: {}
+      x-tags:
+        - user
+        - auth
       properties:
-        id:
-          type: string
         name:
           type: string
         email:
           type: string
-        role:
-          type: string
-        profileId:
-          type: string
-        password:
-          type: string
+        profile:
+          $ref: '#/components/schemas/Profile'
       required:
-        - id
         - name
         - email
-        - role
-        - profileId
-        - password
-      x-examples: {}
+        - profile
     Profile:
       title: Profile
       type: object
       properties:
-        id:
-          type: string
-        crosswordStatsId:
-          type: string
-        brainstormStatsId:
-          type: string
-        songStatsId:
-          type: string
         avatarUrl:
           type: string
+        crosswordStats:
+          $ref: '#/components/schemas/CrosswordsStats'
+        brainstormStats:
+          $ref: '#/components/schemas/BrainstormStats'
+        songStats:
+          $ref: '#/components/schemas/SongStats'
+      x-tags:
+        - profile
     CrosswordsStats:
       title: CrosswordsStats
       type: object
-      properties:
-        id:
-          type: string
+      x-tags:
+        - stats
     BrainstormStats:
       title: BrainstormStats
       type: object
-      properties:
-        id:
-          type: string
+      x-tags:
+        - stats
     SongStats:
       title: SongStats
       type: object
-      properties:
-        id:
-          type: string
+      x-tags:
+        - stats
     CrosswordGame:
       title: CrosswordGame
       type: object
-      properties:
-        id:
-          type: string
+      x-tags:
+        - game
     BrainstormGame:
       title: BrainstormGame
       type: object
-      properties:
-        id:
-          type: string
+      x-tags:
+        - game
     SongGame:
       title: SongGame
       type: object
-      properties:
-        id:
-          type: string
+      x-tags:
+        - game
+  securitySchemes: {}
+tags:
+  - name: game
+  - name: profile
+  - name: stats
+  - name: auth
+  - name: user
