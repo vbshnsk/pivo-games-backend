@@ -64,10 +64,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                type: object
-                properties: {}
         '401':
           description: Unauthorized
         '404':
@@ -99,10 +95,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Profile'
-            application/xml:
-              schema:
-                type: object
-                properties: {}
       operationId: get-user-userName-profile
       description: Gets user's Profile
       parameters: []
