@@ -1,4 +1,4 @@
-import {createConnection} from 'typeorm';
+import {createConnection, QueryFailedError} from 'typeorm';
 import fp from 'fastify-plugin';
 import {FastifyInstance, FastifyPluginOptions} from 'fastify';
 import UserRepository from './repositories/user';

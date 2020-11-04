@@ -5,11 +5,13 @@ import Profile from '../entities/profile';
 
 @EntityRepository(User)
 export default class UserRepository extends Repository<User> {
-    async loginUser(username: string, password: string): Promise<Pick<User, 'username'|'role'> | null> {
+    async loginUser(username: string, password: string): Promise<Pick<User, 'username'|'role'> | {error: string}> {
         const res = await this.createQueryBuilder()
             .select()
             .where('"User".username = :username', {username})
             .getOne();
+
+        if (!res) return {error: 'Not found'};
         const hash = res.password;
 
         const hashMatches = await bcrypt.compare(password, hash);
@@ -20,7 +22,7 @@ export default class UserRepository extends Repository<User> {
             };
         }
         else {
-            return null;
+            return {error: 'Unauthorized'};
         }
     }
 
@@ -42,5 +44,37 @@ export default class UserRepository extends Repository<User> {
             username: res.username,
             email: res.email
         };
+    }
+
+    async getAll(): Promise<Array<Pick<User, 'username' | 'email' | 'profile'>>> {
+        const res = await this.createQueryBuilder()
+            .select()
+            .leftJoinAndSelect('User.profile', 'profile')
+            .getMany();
+        return res.map(u => {
+            return {username: u.username, email: u.email, profile: u.profile};
+        });
+    }
+
+    async getOne(username: string): Promise<Pick<User, 'username' | 'email' | 'profile'>> {
+        const res = await this.createQueryBuilder()
+            .select()
+            .where('User.username = :username', {username})
+            .leftJoinAndSelect('User.profile', 'profile')
+            .getOne();
+        return {
+            username: res.username,
+            email: res.email,
+            profile: res.profile
+        };
+    }
+
+    async getOneProfile(username: string):Promise<Profile> {
+        const res = await this.createQueryBuilder()
+            .select()
+            .where('User.username = :username', {username})
+            .leftJoinAndSelect('User.profile', 'profile')
+            .getOne();
+        return res.profile;
     }
 }
