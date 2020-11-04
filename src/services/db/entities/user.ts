@@ -1,8 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne } from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToOne, JoinColumn, Unique} from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import Profile from './profile';
 
 @Entity()
+@Unique('uq-email', ['email'])
+@Unique('uq-username', ['username'])
 export default class User {
 
     @PrimaryGeneratedColumn()
@@ -17,7 +19,8 @@ export default class User {
     @Column()
     role: string;
 
-    @OneToOne(type => Profile, {cascade: true})
+    @OneToOne(() => Profile, {cascade: true})
+    @JoinColumn()
     profile: Profile;
 
     @Column()

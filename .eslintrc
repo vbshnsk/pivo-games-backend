@@ -14,10 +14,7 @@
         4,
         {"SwitchCase": 1}
       ],
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
+      "linebreak-style": ["off"],
       "quotes": [
         "error",
         "single"
@@ -43,7 +40,9 @@
       "no-var": ["off"],
       "@typescript-eslint/no-empty-interface": ["off"],
       "@typescript-eslint/no-unused-vars": ["off"],
-      "@typescript-eslint/explicit-module-boundary-types": ["off"]
+      "@typescript-eslint/explicit-module-boundary-types": ["off"],
+      "no-case-declarations": "off",
+      "@typescript-eslint/no-explicit-any": ["off"]
     },
     "plugins": [
       "jest",
