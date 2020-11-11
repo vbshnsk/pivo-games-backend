@@ -1,13 +1,10 @@
-import register from './register';
-import fastify from 'fastify';
+import {start} from './server';
 
-const server = fastify({logger: true});
-
-server.register(register);
-
-server.listen(8080, '0.0.0.0', (err, address) => {
-    if (err) {
-        console.log(err);
-    }
-    console.log(address);
+start().then(server => {
+    server.listen(8080, '0.0.0.0', async (err, address) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log(address);
+    });
 });

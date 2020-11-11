@@ -38,7 +38,7 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
         }, async (request, reply) => {
             const {username, password, email, role} = request.body;
             const token = fastify.jwt.sign(username, role);
-            const repo = fastify.db.user;
+            const repo = fastify.db.user();
             try {
                 const saved = await repo.registerUser(username, email, role, password);
                 reply.code(201);
@@ -74,7 +74,7 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
     fastify.get<{
         Reply: IGetAllReply | IErrorReply
     }>('/', {schema: schema.getUsers}, async (request, reply) => {
-        const users = await fastify.db.user.getAll();
+        const users = await fastify.db.user().getAll();
         reply.send({
             users
         });
@@ -85,7 +85,7 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
         Reply: IGetOneReply | IErrorReply
     }>('/:username', {schema: schema.getUser}, async (request, reply) => {
         const {username} = request.params;
-        const user = await fastify.db.user.getOne(username);
+        const user = await fastify.db.user().getOne(username);
         reply.send({user});
     });
 
@@ -94,7 +94,7 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
         Reply: IGetProfileReply | IErrorReply
     }>('/:username/profile', {schema: schema.getProfile}, async  (request, reply) => {
         const {username} = request.params;
-        const profile = await fastify.db.user.getOneProfile(username);
+        const profile = await fastify.db.user().getOneProfile(username);
         reply.send({profile});
     });
 
