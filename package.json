@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "start-dev": "nodemon dist/index.js",
     "start": "node dist/index.js",
-    "test": "POSTGRES_USER=postgres POSTGRES_DB=db POSTGRES_PASSWORD=postgres jest --coverage",
+    "test": "POSTGRES_USER=postgres POSTGRES_DB=postgres POSTGRES_PASSWORD=postgres jest --coverage",
     "lint": "eslint ./src/**"
   },
   "repository": {

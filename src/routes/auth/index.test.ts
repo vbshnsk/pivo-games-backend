@@ -66,4 +66,8 @@ describe('auth', () => {
         });
     });
 
+    afterAll(async () => {
+        await server.db.user().clear();
+    });
+
 });
