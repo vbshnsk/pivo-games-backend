@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "start-dev": "nodemon dist/index.js",
     "start": "node dist/index.js",
-    "test": "POSTGRES_USER=postgres POSTGRES_DB=postgres POSTGRES_PASSWORD=postgres jest --coverage",
+    "test": "POSTGRES_USER=postgres POSTGRES_DB=postgres POSTGRES_PASSWORD=postgres jest -i --coverage",
     "lint": "eslint ./src/**"
   },
   "repository": {
@@ -27,6 +27,9 @@
   },
   "homepage": "https://github.com/vbshnsk/pivo-games-backend#readme",
   "devDependencies": {
+    "@stryker-mutator/core": "^4.1.2",
+    "@stryker-mutator/jest-runner": "^4.1.2",
+    "@stryker-mutator/typescript": "^4.0.0",
     "@types/jest": "^26.0.14",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.11.2",

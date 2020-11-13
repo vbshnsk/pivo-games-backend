@@ -9,7 +9,8 @@ declare module 'fastify' {
         validateUsername: validateUsername;
         db: {
             connectToDb: (test: boolean) => Promise<void>
-            user: () => UserRepository
+            user: () => UserRepository,
+            closeConnection: () => Promise<null>
         };
         jwt: auth;
         guard: guard;

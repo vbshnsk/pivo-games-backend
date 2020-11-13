@@ -89,6 +89,16 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
         reply.send({user});
     });
 
+    fastify.delete<{
+        Params: IBaseParams,
+        Reply: void | IErrorReply
+    }>('/:username', async (request, reply) => {
+        const {username} = request.params;
+        await fastify.db.user().deleteByUsername(username);
+        reply.code(204);
+        reply.send();
+    });
+
     fastify.get<{
         Params: IBaseParams,
         Reply: IGetProfileReply | IErrorReply
