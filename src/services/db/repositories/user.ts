@@ -77,4 +77,11 @@ export default class UserRepository extends Repository<User> {
             .getOne();
         return res.profile;
     }
+
+    async deleteByUsername(username: string): Promise<void> {
+        await this.createQueryBuilder()
+            .delete()
+            .where('username = :username', {username})
+            .execute();
+    }
 }

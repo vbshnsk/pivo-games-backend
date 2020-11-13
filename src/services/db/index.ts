@@ -16,10 +16,11 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
                 password: process.env.POSTGRES_PASSWORD,
                 database: process.env.POSTGRES_DB,
                 entities: [__dirname + '/entities/*.js', __dirname + '/entities/*.ts'],
-                synchronize: test
+                synchronize: test,
             });
         },
-        user: () => connection?.getCustomRepository<UserRepository>(UserRepository)
+        user: () => connection?.getCustomRepository<UserRepository>(UserRepository),
+        closeConnection: () => connection?.close().then(() => null)
     });
 };
 

@@ -3,7 +3,6 @@ import {FastifyInstance} from 'fastify';
 let server: FastifyInstance;
 
 describe('auth', () => {
-
     beforeAll(async () => {
         server = await startForTests();
     });
@@ -23,6 +22,7 @@ describe('auth', () => {
 
     describe('POST: /', () => {
         beforeAll(async () => {
+            await server.db.user().clear();
             await server.db.user().registerUser(
                 'testusername', 'testemail', 'admin', 'testpassword1'
             );
@@ -61,13 +61,12 @@ describe('auth', () => {
             expect(payload).toHaveProperty('token');
         });
 
-        afterAll(async () => {
-            await server.db.user().clear();
-        });
     });
 
     afterAll(async () => {
         await server.db.user().clear();
+        await server.db.closeConnection();
+        await server.close();
     });
 
 });

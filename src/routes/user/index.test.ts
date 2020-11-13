@@ -1,13 +1,13 @@
 import {startForTests} from '../../server';
 import {FastifyInstance} from 'fastify';
-let server: FastifyInstance,
-    sampleUsers = [
-        {username: 'testusername', email: 'testemail', role: 'admin', password: 'testpassword1'},
-        {username: 'testusername1', email: 'testemail1', role: 'admin', password: 'testpassword1'},
+let server: FastifyInstance;
+const sampleUsers = [
+        {username: 'usertestuser', email: 'usertestemail', role: 'admin', password: 'testpassword1'},
+        {username: 'usertestuser1', email: 'usertestemail1', role: 'admin', password: 'testpassword1'},
     ],
     sampleResponses = [
-        {username: 'testusername', email: 'testemail', profile: {avatarUrl: ''}},
-        {username: 'testusername', email: 'testemail', profile: {avatarUrl: ''}},
+        {username: 'usertestuser', email: 'usertestemail', profile: {avatarUrl: ''}},
+        {username: 'usertestuser1', email: 'usertestemail1', profile: {avatarUrl: ''}},
     ];
 
 describe('user', () => {
@@ -43,14 +43,14 @@ describe('user', () => {
             });
             const payload = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(201);
-            expect(payload).toMatchObject({user: {username: 'testusername2', email: 'testemail1'}})
+            expect(payload).toMatchObject({user: {username: 'testusername2', email: 'testemail1'}});
         });
 
         test('should not register a not unique user', async () => {
             const response = await server.inject({
                 method: 'post',
                 url: '/user',
-                payload: {username: 'testusername', password: 'testpassword2', role: 'admin', email: 'testemail'}
+                payload: {username: 'usertestuser', password: 'testpassword2', role: 'admin', email: 'testemail'}
             });
             const payload = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(400);
@@ -59,14 +59,11 @@ describe('user', () => {
                 message: 'User with username already exists.'
             });
         });
-
-        afterAll(async () => {
-            await server.db.user().clear();
-        });
     });
 
     describe('GET: /', () => {
         beforeAll(async () => {
+            await server.db.user().clear();
             for (const sampleUser of sampleUsers) {
                 await server.db.user().registerUser(
                     sampleUser.username, sampleUser.email, sampleUser.role, sampleUser.password
@@ -101,7 +98,7 @@ describe('user', () => {
         test('should get a single user', async () => {
             const response = await server.inject({
                 method: 'get',
-                url: '/user/testusername'
+                url: '/user/usertestuser'
             });
             const payload = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(200);
@@ -111,20 +108,19 @@ describe('user', () => {
         test('should get a single user\'s profile', async () => {
             const response = await server.inject({
                 method: 'get',
-                url: '/user/testusername/profile'
+                url: '/user/usertestuser/profile'
             });
             const payload = JSON.parse(response.payload);
             expect(response.statusCode).toEqual(200);
             expect(payload).toMatchObject({profile: sampleResponses[0].profile});
         });
 
-        afterAll(async () => {
-            await server.db.user().clear();
-        });
     });
 
     afterAll(async () => {
         await server.db.user().clear();
+        await server.db.closeConnection();
+        await server.close();
     });
 
 });

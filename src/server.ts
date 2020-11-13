@@ -15,6 +15,6 @@ export const startForTests = async () => {
     await server.ready();
     await server.db.connectToDb(true);
     return server;
-}
+};
 
 export default server;

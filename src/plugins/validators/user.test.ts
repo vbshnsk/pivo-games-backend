@@ -6,7 +6,7 @@ describe('user validators', () => {
     beforeAll(async () => {
         server.register(plugin);
         await server.ready();
-    })
+    });
 
     test('should validate correct password', async () => {
         const correctPassword = 'correctpass1';
@@ -25,7 +25,7 @@ describe('user validators', () => {
     });
 
     test('should validate correct username', () => {
-       const correctUsernames = ['testusername1', 'another_user', 'userr', 'us.er'];
+        const correctUsernames = ['testusername1', 'another_user', 'userr', 'us.er'];
 
         for (const correctUsername of correctUsernames) {
             expect(server.validateUsername(correctUsername)).toEqual(true);
@@ -35,7 +35,7 @@ describe('user validators', () => {
     test('should not validate incorrect username', () => {
         const incorrectByLengthS = 'u';
         const incorrectByLengthL = 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuu';
-        const incorrectBySymbols = '139*4;;@@@"'
+        const incorrectBySymbols = '139*4;;@@@"';
 
         expect(server.validateUsername(incorrectByLengthS)).not.toEqual(true);
         expect(server.validateUsername(incorrectByLengthL)).not.toEqual(true);
