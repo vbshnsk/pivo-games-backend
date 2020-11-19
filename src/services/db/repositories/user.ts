@@ -81,7 +81,7 @@ export default class UserRepository extends Repository<User> {
     async deleteByUsername(username: string): Promise<void> {
         await this.createQueryBuilder()
             .delete()
-            .where('User.username = :username', {username})
+            .where('username = :username', {username})
             .execute();
     }
 }
