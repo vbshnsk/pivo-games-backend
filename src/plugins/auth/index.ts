@@ -1,12 +1,12 @@
 import fp from 'fastify-plugin';
 import * as jwt from 'jsonwebtoken';
 import {FastifyInstance, FastifyPluginOptions} from 'fastify';
-import User from '../db/entities/user';
+import User from '../../services/db/entities/user';
 
 const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) => {
     fastify.decorate('jwt', {
         sign: (username: string, role: string) => jwt.sign({username, role}, 'placeholder'),
-        verify: (token: string) =>  jwt.verify(token, 'placeholder', {maxAge: '1 month'})
+        verify: (token: string) => jwt.verify(token, 'placeholder', {maxAge: '1 month'})
     });
 };
 
