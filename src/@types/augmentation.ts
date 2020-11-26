@@ -2,6 +2,7 @@ import { validatePassword, validateUsername } from '../plugins/validators/user';
 import UserRepository from '../services/db/repositories/user';
 import {auth} from '../plugins/auth';
 import {guard} from '../plugins/typeguards';
+import WordApi from '../services/external/wordapi';
 
 declare module 'fastify' {
     export interface FastifyInstance {
@@ -12,6 +13,7 @@ declare module 'fastify' {
             user: () => UserRepository,
             closeConnection: () => Promise<null>
         };
+        wordApi: WordApi;
         jwt: auth;
         guard: guard;
     }
