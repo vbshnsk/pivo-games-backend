@@ -422,11 +422,9 @@ export default class WordApi {
         ]))
             .flat()
             .filter((v, i, a) => a.findIndex(val => v === val) === i);
-        console.log(fetched.length);
         if (this._isAWordList(fetched) && fetched.length > 4) {
             while (synonyms.length !== count) {
                 const word = fetched[Math.ceil(Math.random() * fetched.length)];
-                console.log(word.word);
                 if (!(synonyms.find(v => v === word.word) === undefined)) continue;
                 synonyms.push(word.word);
             }
