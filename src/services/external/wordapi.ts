@@ -438,27 +438,34 @@ export default class WordApi {
     }
 
     async generateMillionaireGame(topic: Topic, wordCount: number, difficulty: Difficulty): Promise<MillionaireGame> {
+
         const wordList = await this.generateWordsForTopic(topic, wordCount, difficulty);
         const game: MillionaireGame = {
             topics: topics[topic],
             difficulty: difficulty,
             questions: []
         };
+        const synonymPromiseList: Array<Promise<Array<string>>> = [];
         for (const word of wordList) {
             try {
-                const synonyms = await this.getCloseWords(word.word, 3);
-                const options = shuffle<string>([word.word, ...synonyms]);
-                const answer = options.findIndex(v => v === word.word);
-                game.questions.push({
-                    options,
-                    questionText: word.definition,
-                    answerId: answer
-                });
+                synonymPromiseList.push(this.getCloseWords(word.word, 3));
             }
             catch (e) {
                 continue;
             }
         }
+        const synonymList = await Promise.all(synonymPromiseList);
+        synonymList.map((v, i) => {
+            const word = wordList[i];
+            const options = shuffle<string>([word.word, ...v]);
+            const answer = options.findIndex(v => v === word.word);
+            game.questions.push({
+                options,
+                questionText: word.definition,
+                answerId: answer
+            });
+        })
+
         return game;
     }
 
