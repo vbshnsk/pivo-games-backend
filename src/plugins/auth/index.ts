@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import * as jwt from 'jsonwebtoken';
 import {FastifyInstance, FastifyPluginOptions} from 'fastify';
-import User from '../../services/db/entities/user';
+import User from '../../services/db/typeorm/entities/user';
 
 const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) => {
     fastify.decorate('jwt', {

@@ -4,6 +4,7 @@ let server: FastifyInstance;
 const sampleUsers = [
         {username: 'usertestuser', email: 'usertestemail', role: 'admin', password: 'testpassword1'},
         {username: 'usertestuser1', email: 'usertestemail1', role: 'admin', password: 'testpassword1'},
+        {username: 'usertestuser2', email: 'usertestemail2', role: 'admin', password: 'testpassword1'}
     ],
     sampleResponses = [
         {username: 'usertestuser', email: 'usertestemail', profile: {avatarUrl: ''}},
@@ -30,7 +31,7 @@ describe('user', () => {
 
     describe('POST: /', () => {
         beforeAll(async () => {
-            await server.db.user().registerUser(
+            await server.db.registerUser(
                 sampleUsers[0].username, sampleUsers[0].email, sampleUsers[0].role, sampleUsers[0].password
             );
         });
@@ -63,9 +64,9 @@ describe('user', () => {
 
     describe('GET: /', () => {
         beforeAll(async () => {
-            await server.db.user().clear();
+            await server.db.clear();
             for (const sampleUser of sampleUsers) {
-                await server.db.user().registerUser(
+                await server.db.registerUser(
                     sampleUser.username, sampleUser.email, sampleUser.role, sampleUser.password
                 );
             }
@@ -84,13 +85,13 @@ describe('user', () => {
         });
 
         afterAll(async () => {
-            await server.db.user().clear();
+            await server.db.clear();
         });
     });
 
     describe('GET: /:username && GET: /:username/profile', () => {
         beforeAll(async () => {
-            await server.db.user().registerUser(
+            await server.db.registerUser(
                 sampleUsers[0].username, sampleUsers[0].email, sampleUsers[0].role, sampleUsers[0].password
             );
         });
@@ -117,9 +118,30 @@ describe('user', () => {
 
     });
 
+    describe('DELETE: /:username', () => {
+        beforeAll(async () => {
+            await server.db.registerUser(
+                sampleUsers[2].username, sampleUsers[2].email, sampleUsers[0].role, sampleUsers[0].password
+            );
+        });
+
+        test('should delete a user', async () => {
+            const response = await server.inject({
+                method: 'delete',
+                url: '/user/usertestuser2'
+            });
+
+            expect(response.statusCode).toEqual(204);
+        });
+
+        afterAll(async () => {
+            await server.db.clear();
+        });
+    });
+
     afterAll(async () => {
-        await server.db.user().clear();
-        await server.db.closeConnection();
+        await server.db.clear();
+        await server.db.disconnect();
         await server.close();
     });
 

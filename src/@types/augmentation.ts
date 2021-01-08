@@ -1,18 +1,15 @@
 import { validatePassword, validateUsername } from '../plugins/validators/user';
-import UserRepository from '../services/db/repositories/user';
+import UserRepository from '../services/db/typeorm/repositories/user';
 import {auth} from '../plugins/auth';
 import {guard} from '../plugins/typeguards';
 import WordApi from '../services/external/wordapi';
+import IDatabaseConnection from "../services/db/interface";
 
 declare module 'fastify' {
     export interface FastifyInstance {
         validatePassword: validatePassword;
         validateUsername: validateUsername;
-        db: {
-            connectToDb: (test: boolean) => Promise<void>
-            user: () => UserRepository,
-            closeConnection: () => Promise<null>
-        };
+        db: IDatabaseConnection;
         wordApi: WordApi;
         jwt: auth;
         guard: guard;

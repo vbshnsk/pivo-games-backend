@@ -24,7 +24,7 @@ const plugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) =
         Reply: IAuthReply | IErrorReply
     }>('/', {schema}, async (request, reply) => {
         const {username, password} = request.body;
-        const repo = fastify.db.user();
+        const repo = fastify.db;
         const user = await repo.loginUser(username, password);
         if (!fastify.guard.error(user)) {
             const token = fastify.jwt.sign(user.username, user.role);

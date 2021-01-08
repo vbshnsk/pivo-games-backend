@@ -22,8 +22,8 @@ describe('auth', () => {
 
     describe('POST: /', () => {
         beforeAll(async () => {
-            await server.db.user().clear();
-            await server.db.user().registerUser(
+            await server.db.clear();
+            await server.db.registerUser(
                 'testusername', 'testemail', 'admin', 'testpassword1'
             );
         });
@@ -64,8 +64,8 @@ describe('auth', () => {
     });
 
     afterAll(async () => {
-        await server.db.user().clear();
-        await server.db.closeConnection();
+        await server.db.clear();
+        await server.db.disconnect();
         await server.close();
     });
 

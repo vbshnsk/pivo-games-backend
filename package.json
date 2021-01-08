@@ -7,7 +7,9 @@
     "build": "tsc -p tsconfig.json",
     "start-dev": "nodemon dist/index.js",
     "start": "node dist/index.js",
+    "pretest": "docker run --name pivo-test-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=postgres -p 5432:5432 -d postgres",
     "test": "POSTGRES_USER=postgres POSTGRES_DB=postgres POSTGRES_PASSWORD=postgres jest -i --coverage",
+    "posttest": "docker rm -f pivo-test-postgres",
     "lint": "eslint ./src/** --fix"
   },
   "repository": {
