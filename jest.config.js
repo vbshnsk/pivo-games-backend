@@ -8,5 +8,6 @@ module.exports = {
     ],
     'transform': {
         '^.+\\.(ts|tsx)$': 'ts-jest'
-    }
+    },
+    'testResultsProcessor': 'jest-teamcity-reporter'
 };
