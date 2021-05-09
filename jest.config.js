@@ -9,5 +9,10 @@ module.exports = {
     'transform': {
         '^.+\\.(ts|tsx)$': 'ts-jest'
     },
-    'testResultsProcessor': 'jest-teamcity-reporter'
+    'testResultsProcessor': 'jest-teamcity-reporter',
+    'reporter': [
+        'default',
+        'jest-github-actions-reporter'
+    ],
+    testLocationInResults: true
 };

@@ -1,6 +1,6 @@
-import IDatabaseConnection from "../interface";
-import {Connection, createConnection} from "typeorm";
-import UserRepository from "./repositories/user";
+import IDatabaseConnection from '../interface';
+import {Connection, createConnection} from 'typeorm';
+import UserRepository from './repositories/user';
 
 export default class TypeOrmConnection implements IDatabaseConnection {
     private connection: Connection;
@@ -17,7 +17,7 @@ export default class TypeOrmConnection implements IDatabaseConnection {
             entities: [__dirname + '/entities/*.js', __dirname + '/entities/*.ts'],
             synchronize: true,
         });
-        this.userRepo = this.connection.getCustomRepository<UserRepository>(UserRepository)
+        this.userRepo = this.connection.getCustomRepository<UserRepository>(UserRepository);
     }
 
     async disconnect() {

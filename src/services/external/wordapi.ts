@@ -464,7 +464,7 @@ export default class WordApi {
                 questionText: word.definition,
                 answerId: answer
             });
-        })
+        });
 
         return game;
     }
